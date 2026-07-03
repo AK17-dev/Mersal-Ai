@@ -7,7 +7,7 @@ minify = true
 [[d1_databases]]
 binding = "DB"
 database_name = "mersal-db"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "46481087-8bd4-4726-91cd-02c7dfb46d44"
 migrations_dir = "migrations"
 
 [[r2_buckets]]

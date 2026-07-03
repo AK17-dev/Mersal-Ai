@@ -16,11 +16,15 @@ pdfjs.GlobalWorkerOptions.workerSrc = 'dummy';
 await definePDFJSModule(() => Promise.resolve(pdfjs));
 const app = new Hono();
 // Enable CORS with custom header support
-app.use('*', cors({
-    origin: '*',
-    allowHeaders: ['Content-Type', 'x-session-id'],
-    allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-}));
+app.use('*', async (c, next) => {
+    const allowedOrigin = c.env.ALLOWED_ORIGIN || '*';
+    const corsMiddleware = cors({
+        origin: allowedOrigin,
+        allowHeaders: ['Content-Type', 'x-session-id'],
+        allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    });
+    return corsMiddleware(c, next);
+});
 // Global UTF-8 charset middleware for all JSON responses
 app.use('*', async (c, next) => {
     await next();

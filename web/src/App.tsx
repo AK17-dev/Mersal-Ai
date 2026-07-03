@@ -115,7 +115,8 @@ const translations = {
     arCases: "Arabic",
     enCases: "English",
     correctLabel: "Correct",
-    incorrectLabel: "Incorrect"
+    incorrectLabel: "Incorrect",
+    landingText: "Mersal (مرسال) is a secure, bilingual (Arabic & English) retrieval-augmented generation (RAG) platform. By uploading PDF files into your current session, the system automatically parses text on a page-by-page basis using serverless parsing, builds semantic vector indexes, and allows you to chat naturally with your documents. Every response is generated strictly from your uploaded files, complete with lenient page-level citations, validated by a structured Gemini evaluation harness."
   },
   ar: {
     title: "مرسال",
@@ -186,7 +187,8 @@ const translations = {
     arCases: "العربية",
     enCases: "الإنجليزية",
     correctLabel: "صحيح",
-    incorrectLabel: "خاطئ"
+    incorrectLabel: "خاطئ",
+    landingText: "مرسال هو منصة آمنة وثنائية اللغة (العربية والإنجليزية) لتوليد الإجابات المعززة بالاسترجاع (RAG). بمجرد تحميل ملفات PDF في جلستك الحالية، يقوم النظام تلقائياً باستخراج نصوصها صفحة بصفحة وفهرستها معجمياً ودلالياً، مما يتيح لك الدردشة وطرح الأسئلة بلغتك المفضلة. يتم توليد الإجابات بدقة واعتماداً حصرياً على مستنداتك المرفوعة مع توثيق هوامش الصفحات والاقتباسات، وبتقييم دقيق من خلال لوحة التقييم المتكاملة."
   }
 }
 
@@ -204,6 +206,11 @@ const getSessionId = (): string => {
 
 export default function App() {
   const [sessionId] = useState(getSessionId)
+  
+  const apiFetch = useCallback((path: string, options?: RequestInit) => {
+    const baseUrl = import.meta.env.VITE_API_URL || ''
+    return fetch(`${baseUrl}${path}`, options)
+  }, [])
   const [documents, setDocuments] = useState<DocumentItem[]>([])
   const [loading, setLoading] = useState(false)
   const [uploadState, setUploadState] = useState<'idle' | 'dragging' | 'uploading' | 'extracting'>('idle')
@@ -245,7 +252,7 @@ export default function App() {
   // Fetch documents for the current session
   const fetchDocuments = useCallback(async () => {
     try {
-      const response = await fetch('/api/documents', {
+      const response = await apiFetch('/api/documents', {
         headers: {
           'x-session-id': sessionId
         }
@@ -264,7 +271,7 @@ export default function App() {
   // Fetch chat history for the current session
   const fetchChatHistory = useCallback(async () => {
     try {
-      const response = await fetch('/api/chat', {
+      const response = await apiFetch('/api/chat', {
         headers: {
           'x-session-id': sessionId
         }
@@ -284,8 +291,8 @@ export default function App() {
   const fetchEvalsData = useCallback(async () => {
     try {
       const [casesRes, runsRes] = await Promise.all([
-        fetch('/api/evals/cases'),
-        fetch('/api/evals/runs')
+        apiFetch('/api/evals/cases'),
+        apiFetch('/api/evals/runs')
       ])
       if (casesRes.ok) {
         const casesData = await casesRes.json()
@@ -381,7 +388,7 @@ export default function App() {
     formData.append('file', file)
 
     try {
-      const response = await fetch('/api/documents', {
+      const response = await apiFetch('/api/documents', {
         method: 'POST',
         headers: {
           'x-session-id': sessionId
@@ -425,7 +432,7 @@ export default function App() {
   const handleDelete = async (docId: string) => {
     setErrorMsg(null)
     try {
-      const response = await fetch(`/api/documents/${docId}`, {
+      const response = await apiFetch(`/api/documents/${docId}`, {
         method: 'DELETE',
         headers: {
           'x-session-id': sessionId
@@ -450,7 +457,7 @@ export default function App() {
     setErrorMsg(null)
     setLoading(true)
     try {
-      const response = await fetch('/api/documents', {
+      const response = await apiFetch('/api/documents', {
         method: 'DELETE',
         headers: {
           'x-session-id': sessionId
@@ -490,7 +497,7 @@ export default function App() {
     setMessages(prev => [...prev, newMsg])
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await apiFetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -546,7 +553,7 @@ export default function App() {
 
     try {
       // 1. Initialize run and reset D1 cases results
-      const initRes = await fetch('/api/evals/run', {
+      const initRes = await apiFetch('/api/evals/run', {
         method: 'POST',
         headers: {
           'x-session-id': sessionId
@@ -574,7 +581,7 @@ export default function App() {
         setEvalProgress({ current: i + 1, total: evalCases.length })
 
         // Evaluate single case
-        const caseRes = await fetch(`/api/evals/run-case/${kase.id}`, {
+        const caseRes = await apiFetch(`/api/evals/run-case/${kase.id}`, {
           method: 'POST',
           headers: {
             'x-session-id': sessionId
@@ -653,7 +660,7 @@ export default function App() {
 
       // 3. Finalize run totals (even if aborted, complete run to save aggregate stats)
       if (runId) {
-        const completeRes = await fetch('/api/evals/complete-run', {
+        const completeRes = await apiFetch('/api/evals/complete-run', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -687,7 +694,7 @@ export default function App() {
     setReRunningCaseId(caseId)
 
     try {
-      const caseRes = await fetch(`/api/evals/run-case/${caseId}`, {
+      const caseRes = await apiFetch(`/api/evals/run-case/${caseId}`, {
         method: 'POST',
         headers: {
           'x-session-id': sessionId
@@ -745,7 +752,7 @@ export default function App() {
     if (!editingCase || !editQuestion.trim() || !editExpectedAnswer.trim()) return
 
     try {
-      const response = await fetch(`/api/evals/cases/${editingCase.id}`, {
+      const response = await apiFetch(`/api/evals/cases/${editingCase.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -886,6 +893,24 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      {/* Landing Section Banner */}
+      <div className="max-w-7xl w-full mx-auto px-6 pt-6 pb-2">
+        <div className="bg-slate-900/20 border border-slate-900/60 rounded-2xl p-5 backdrop-blur-sm flex items-start space-x-4 rtl:space-x-reverse">
+          <div className="bg-brand-950/20 text-brand-400 p-2 rounded-xl border border-brand-900/20 flex-shrink-0 self-center hidden sm:block">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div className="space-y-1.5">
+            <h2 className="text-xs font-bold text-slate-300 flex items-center space-x-1.5 rtl:space-x-reverse">
+              <Sparkles className="w-3.5 h-3.5 text-brand-400 sm:hidden" />
+              <span>{language === 'en' ? 'Welcome to Mersal' : 'مرحباً بك في مرسال'}</span>
+            </h2>
+            <p className="text-xs text-slate-400 leading-relaxed max-w-6xl">
+              {t.landingText}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Tab Selection */}
       <div className="max-w-7xl w-full mx-auto px-6 pt-6">

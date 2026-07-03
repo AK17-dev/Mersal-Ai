@@ -1,5 +1,5 @@
 # Mersal (مرسال) 🚀
-
+**[🔴 Live Demo](https://mersal-117.pages.dev)** · Built end-to-end on Cloudflare's edge platform
 Mersal (مرسال) is a secure, high-performance, bilingual (Arabic & English) Retrieval-Augmented Generation (RAG) document Q&A platform built natively on the Cloudflare developer ecosystem and powered by Google Gemini.
 
 ---

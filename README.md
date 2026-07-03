@@ -31,8 +31,13 @@ graph TD
 ```
 
 ---
-
+## 📊 Evaluation Results
+Automated LLM-as-judge evaluation: **20/20 cases passed (100%)** across a bilingual suite —
+10 English + 10 Arabic questions with page-level ground truth, including 2 negative cases
+verifying the system refuses to hallucinate when the answer isn't in the documents.
+[screenshot of the eval dashboard here]
 ## 🛠️ Stack Rationale
+<img width="926" height="891" alt="image" src="https://github.com/user-attachments/assets/62bb5d1c-8843-40cc-8be2-3c4a0c17a1a8" />
 
 *   **Frontend (Vite + React + Tailwind)**: Responsive bilingual UI with full LTR (Outfit font) and RTL (Cairo font) layouts. States are synchronized with `localStorage` for visual consistency (no language flash).
 *   **Backend (Hono Worker)**: An ultra-lightweight web framework designed for edge runtimes. The production bundle is minified under Cloudflare's **1MB free tier limit** (gzip: **957.54 KiB**) by utilizing lightweight native libraries (`unpdf` in fake-worker mode).

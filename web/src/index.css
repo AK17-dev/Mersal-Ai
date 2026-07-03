@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 min-h-screen selection:bg-brand-500/30;
+  }
+
+  /* Smooth scroll support */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* RTL Arabic typography settings */
+[dir="rtl"] {
+  font-family: 'Cairo', 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+/* LTR English typography settings */
+[dir="ltr"] {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbar adjustments for a premium look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.1);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.25);
+}

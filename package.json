@@ -1,0 +1,17 @@
+{
+  "name": "mersal-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "api",
+    "web"
+  ],
+  "scripts": {
+    "dev": "concurrently --kill-others \"npm run dev --workspace=api\" \"npm run dev --workspace=web\"",
+    "build": "npm run build --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "wrangler": "^4.106.0"
+  }
+}

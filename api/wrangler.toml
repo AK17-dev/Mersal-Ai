@@ -1,0 +1,22 @@
+name = "mersal-api"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+minify = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mersal-db"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "mersal-uploads"
+
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "mersal-vectors"
+
+[ai]
+binding = "AI"

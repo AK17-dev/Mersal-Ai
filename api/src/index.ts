@@ -715,13 +715,17 @@ Expected Answer (Reference): ${expectedAnswer}
 Generated Answer: ${generatedAnswer}
 
 Strict Evaluation Rule:
-If you cannot verify that the generated answer states the same key facts as the expected answer — for any reason, including unclear inputs, placeholder questions, or insufficient context information — you MUST return correct: false. Uncertainty is never a pass. correct: true requires positive confirmation that the key facts match.
+1. correct: true requires that the generated answer correctly and completely answers THE QUESTION, with its facts matching the expected answer.
+2. Key facts are defined as the facts that directly answer the question.
+3. Details in the expected reference answer that go beyond what the question asks are supplementary — their absence in the generated answer must NOT cause failure.
+4. Any factual contradiction with the expected answer, any fabricated or hallucinated fact, or a missing direct answer = correct: false.
+5. If you cannot verify that the generated answer states the same key facts as the expected answer — for any reason, including unclear inputs or insufficient context information — you MUST return correct: false. Uncertainty is never a pass. correct: true requires positive confirmation that the key facts match.
 
 Please evaluate and output a strict JSON object with the following fields:
 {
-  "correct": boolean, // true if the generated answer is factually correct and aligns with the expected answer, false otherwise. Must be false if key facts cannot be verified to match.
+  "correct": boolean, // true if the generated answer satisfies the Strict Evaluation Rule, false otherwise.
   "faithfulness": number, // a score from 0 to 100 representing how well the generated answer is grounded in the provided context (100 means fully grounded without any hallucinations or outside knowledge, 0 means completely ungrounded)
-  "reason": "string" // a detailed explanation stating exactly which key facts matched or mismatched, and detailing correctness and faithfulness judgments
+  "reason": "string" // a detailed explanation stating exactly which key facts matched or mismatched, which supplementary details were omitted (if any), and detailing correctness and faithfulness judgments
 }
 
 Do not include any other text, markdown formatting, or wrappers. Output raw JSON only.`

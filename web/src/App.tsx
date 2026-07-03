@@ -1366,8 +1366,8 @@ export default function App() {
               <h2 className="text-lg font-bold text-slate-200">{t.tabEvaluation}</h2>
               <p className="text-xs text-slate-400 leading-normal">
                 {language === 'en'
-                  ? 'Runs RAG QA queries against your seeded cases, using gemini-2.5-flash as judge to rate correctness & faithfulness.'
-                  : 'تشغيل أسئلة التطوير مقابل الحالات المخزنة وتقييمها بـ gemini-2.5-flash للتأكد من الدقة الفنية.'}
+                  ? 'Runs RAG QA queries against your seeded cases, using gemini-3.1-flash-lite as judge to rate correctness & faithfulness.'
+                  : 'تشغيل أسئلة التطوير مقابل الحالات المخزنة وتقييمها بـ gemini-3.1-flash-lite للتأكد من الدقة الفنية.'}
               </p>
             </div>
             
